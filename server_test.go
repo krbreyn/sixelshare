@@ -92,7 +92,7 @@ func newPostImageRequest(id, image string) *http.Request {
 func assertImageServed(t testing.TB, got, want string) {
 	t.Helper()
 	if got != want {
-		t.Error("did not get served sixel image string after upload")
+		t.Error("did not get expected sixel image string after upload")
 	}
 }
 
