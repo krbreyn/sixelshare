@@ -41,6 +41,8 @@ func (s *SixelServer) getImageHandler(w http.ResponseWriter, r *http.Request) {
 
 	if image == "" {
 		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprint(w, "Requested image not found.")
+		return
 	}
 
 	fmt.Fprint(w, image)

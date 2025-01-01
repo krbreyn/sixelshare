@@ -27,7 +27,7 @@ func TestGETImages(t *testing.T) {
 		server.ServeHTTP(response, request)
 
 		assertStatus(t, response.Code, http.StatusOK)
-		assertResponseBody(t, response.Body.String(), testimage1)
+		assertImageServed(t, response.Body.String(), testimage1)
 	})
 
 	t.Run("return 404 on invalid image", func(t *testing.T) {
@@ -37,7 +37,7 @@ func TestGETImages(t *testing.T) {
 		server.ServeHTTP(response, request)
 
 		assertStatus(t, response.Code, http.StatusNotFound)
-		assertResponseBody(t, response.Body.String(), "")
+		assertResponseBody(t, response.Body.String(), "Requested image not found.")
 	})
 }
 
@@ -57,9 +57,10 @@ func TestStoreImages(t *testing.T) {
 		response = httptest.NewRecorder()
 		server.ServeHTTP(response, request)
 
-		assertResponseBody(t, response.Body.String(), testimage1)
+		assertImageServed(t, response.Body.String(), testimage1)
 	})
 
+	// TODO
 	t.Run("rejects uploads are not valid sixel strings", func(t *testing.T) {
 
 	})
@@ -88,10 +89,17 @@ func newPostImageRequest(id, image string) *http.Request {
 	return request
 }
 
-func assertResponseBody(t testing.TB, got, want string) {
+func assertImageServed(t testing.TB, got, want string) {
 	t.Helper()
 	if got != want {
 		t.Error("did not get served sixel image string after upload")
+	}
+}
+
+func assertResponseBody(t testing.TB, got, want string) {
+	t.Helper()
+	if got != want {
+		t.Errorf("response body did not match, got %s, want %s", got, want)
 	}
 }
 
